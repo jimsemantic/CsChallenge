@@ -15,11 +15,11 @@ title_data = (
     ("Peewee's Big Adventure", "Netflix", 0.50),
     ("The Godfather", "Capitol Pictures", 9.95)
 )
-stb_ids = range(50)
+stb_ids = range(10, 50)
 date_year = range(1998, 2020)
 date_month = range(1, 13)
 date_day = range(1, 29)
-viewtime_hours = range(0, 11)
+viewtime_hours = range(0, 10)
 viewtime_minutes = range(0, 60, 5)
 
 record_list = []

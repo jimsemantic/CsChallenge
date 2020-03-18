@@ -2,17 +2,27 @@
 // JG Miller (JGM), Portland, OR, jimsemantic@gmail.com
 // 3/17/2020
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.file.Files;
 
-public class Store {
+class Store {
     String storeFileName;
     RandomAccessFile storeRAFile;
+
+    Store() {}
 
     Store(String name) throws IOException {
         storeFileName = name;
         File storeFile = new File(storeFileName);
         Files.deleteIfExists(storeFile.toPath());
+        storeRAFile = new RandomAccessFile(storeFile, "rw");
+    }
+
+    void openStore(String name) throws IOException {
+        storeFileName = name;
+        File storeFile = new File(storeFileName);
         storeRAFile = new RandomAccessFile(storeFile, "rw");
     }
 

@@ -9,31 +9,29 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class BuildDB {
+class BuildDB {
     String inputFileName;
     Store store;
     Index primaryKeyIndex;
     ArrayList<Index> columnIndices;
 
-    public BuildDB() throws IOException {
+    BuildDB() throws IOException {
         inputFileName = "util/input_data";
         System.out.printf("Reading source data from %s\n", inputFileName);
         store = new Store("store.dat");
-        columnIndices = new ArrayList<Index>();
+        columnIndices = new ArrayList<>();
     }
 
     public static void main(String[] args) {
         System.out.println("Started:  " + LocalDateTime.now());
 
-        BuildDB buildDB = null;
         BufferedReader br = null;
         try {
-            buildDB = new BuildDB();
+            BuildDB buildDB = new BuildDB();
             buildDB.primaryKeyIndex = buildDB.createPrimaryKeyIndex("primary_key");
             br = new BufferedReader(new FileReader(buildDB.inputFileName));
-            ArrayList<String> fields = new ArrayList<String>();
-            ArrayList<String> primaryKey = new ArrayList<String>();
-            Long lineOffset;
+            ArrayList<String> fields = new ArrayList<>();
+            ArrayList<String> primaryKey;
             String headerLine = br.readLine();
             buildDB.store.addRecordToStore(headerLine);
             BuildDB finalBuildDB = buildDB;
@@ -46,27 +44,30 @@ public class BuildDB {
                 }
             });
             String line;
+            Long lineOffset;
             while ((line = br.readLine()) != null) {
-                fields.clear();
-                fields.addAll(Arrays.asList(line.split("\\|")));
-                primaryKey.clear();
-                primaryKey.add(fields.get(0));
-                primaryKey.add(fields.get(1));
-                primaryKey.add(fields.get(3));
-                lineOffset = (Long) buildDB.primaryKeyIndex.lookup(primaryKey);
+                primaryKey = buildDB.getPrimaryKey(buildDB, line, fields);
+                lineOffset = buildDB.getLineOffset(buildDB, primaryKey);
                 if (lineOffset == null) {
                     lineOffset = buildDB.store.addRecordToStore(line);
                     buildDB.primaryKeyIndex.storeUnique(primaryKey, lineOffset);
                 } else
                     buildDB.store.overwriteRecordInStore(line, lineOffset);
-                for (int i = 0; i < buildDB.columnIndices.size(); i++)
+            }
+            for (int i = 0; i < buildDB.columnIndices.size(); i++) {
+                br = new BufferedReader(new FileReader(buildDB.inputFileName));
+                br.readLine();
+                while ((line = br.readLine()) != null) {
+                    primaryKey = buildDB.getPrimaryKey(buildDB, line, fields);
+                    lineOffset = buildDB.getLineOffset(buildDB, primaryKey);
                     buildDB.columnIndices.get(i).storeMultivalue(fields.get(i), lineOffset);
+                }
+                buildDB.columnIndices.get(i).serialize();
             }
             buildDB.primaryKeyIndex.serialize();
-            for (int i = 0; i < buildDB.columnIndices.size(); i++)
-                buildDB.columnIndices.get(i).serialize();
             buildDB.store.closeStore();
             System.out.printf("File backing store saved to %s\n", buildDB.store.storeFileName);
+
             System.out.println("Finished:  " + LocalDateTime.now());
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,6 +78,20 @@ public class BuildDB {
                 e.printStackTrace();
             }
         }
+    }
+
+    private ArrayList<String> getPrimaryKey(BuildDB buildDB, String line, ArrayList<String> fields) {
+        fields.clear();
+        ArrayList<String> primaryKey = new ArrayList<>();
+        fields.addAll(Arrays.asList(line.split("\\|")));
+        primaryKey.add(fields.get(0));
+        primaryKey.add(fields.get(1));
+        primaryKey.add(fields.get(3));
+        return primaryKey;
+    }
+
+    private Long getLineOffset(BuildDB buildDB, ArrayList<String> primaryKey) {
+        return (Long) buildDB.primaryKeyIndex.lookup(primaryKey);
     }
 
     private Index createPrimaryKeyIndex(String h) throws IOException {

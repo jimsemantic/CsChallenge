@@ -15,12 +15,18 @@ class Index<K, V> {
         hashMap = new HashMap();
     }
 
+    void loadIndex(String name) throws IOException, ClassNotFoundException {
+        indexFileName = name;
+        deserialize();
+    }
+
     void serialize() throws IOException {
         FileOutputStream fos = new FileOutputStream(indexFileName);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(hashMap);
         oos.close();
         fos.close();
+        hashMap.clear();
         System.out.printf("Index saved to %s\n", indexFileName);
     }
 

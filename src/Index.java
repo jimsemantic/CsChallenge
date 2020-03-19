@@ -2,6 +2,7 @@
 // JG Miller (JGM), Portland, OR, jimsemantic@gmail.com
 // 3/15/2020
 
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +10,8 @@ import java.util.HashMap;
 class Index<K, V> {
     String indexFileName;
     HashMap<K, V> hashMap;
+
+    Index() {}
 
     Index(String name) throws IOException {
         indexFileName = name;

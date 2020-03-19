@@ -2,10 +2,12 @@
 // JG Miller (JGM), Portland, OR, jimsemantic@gmail.com
 // 3/17/2020
 
+
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
+import java.util.ArrayList;
 
 class Store {
     String storeFileName;
@@ -28,6 +30,19 @@ class Store {
 
     String getHeaderLine() throws IOException {
         storeRAFile.seek(0);
+        return storeRAFile.readUTF();
+    }
+
+    ArrayList<String> getAllRecords() throws IOException {
+        ArrayList<String> records = new ArrayList<>();
+        getHeaderLine();
+        while (storeRAFile.getFilePointer() != storeRAFile.length())
+            records.add(storeRAFile.readUTF());
+        return records;
+    }
+
+    String getRecord(Long offset) throws IOException {
+        storeRAFile.seek(offset);
         return storeRAFile.readUTF();
     }
 

@@ -2,6 +2,7 @@
 // JG Miller (JGM), Portland, OR, jimsemantic@gmail.com
 // 3/15/2020
 
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,7 +24,7 @@ class BuildDB {
     }
 
     public static void main(String[] args) {
-        System.out.println("Started:  " + LocalDateTime.now());
+        System.out.println("Started:  " + LocalDateTime.now() + "\n");
 
         BufferedReader br = null;
         try {
@@ -34,11 +35,10 @@ class BuildDB {
             ArrayList<String> primaryKey;
             String headerLine = br.readLine();
             buildDB.store.addRecordToStore(headerLine);
-            BuildDB finalBuildDB = buildDB;
             ArrayList<String> headers = new ArrayList(Arrays.asList(headerLine.split("\\|")));
             headers.forEach((h) -> {
                 try {
-                    finalBuildDB.createColumnIndex(h);
+                    buildDB.createColumnIndex(h);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -68,7 +68,7 @@ class BuildDB {
             buildDB.store.closeStore();
             System.out.printf("File backing store saved to %s\n", buildDB.store.storeFileName);
 
-            System.out.println("Finished:  " + LocalDateTime.now());
+            System.out.println("\n" + "Finished:  " + LocalDateTime.now());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

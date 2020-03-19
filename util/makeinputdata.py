@@ -2,7 +2,7 @@
 
 import random
 
-titles = 10000
+titles = 1000000 
 title_data = (
     ("Cloud Atlas", "Warner Brothers", 4.00),
     ("Breaking Away", "Magnum Pictures", 3.00),

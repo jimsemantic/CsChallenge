@@ -1,6 +1,10 @@
 // BuildDB.java
 // JG Miller (JGM), Portland, OR, jimsemantic@gmail.com
 // 3/15/2020
+//
+// Assumes:  in input file, no missing or empty fields, no deviation from formatting as listed in handout, spellings
+// of TITLEs and PROVIDERs are consistent, STBs all have 2-digit ids, REVs are all under 10.00, no times in
+// 10:00->12:59, and capitalization matters. Many of the assumptions are to ensure constant field lengths, for ease of coding.
 
 
 import java.io.BufferedReader;

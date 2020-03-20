@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 
 class BuildDB {
     String inputFileName;
@@ -59,11 +61,14 @@ class BuildDB {
                     buildDB.store.overwriteRecordInStore(line, lineOffset);
             }
             for (int i = 0; i < buildDB.columnIndices.size(); i++) {
-                br = new BufferedReader(new FileReader(buildDB.inputFileName));
-                br.readLine();
-                while ((line = br.readLine()) != null) {
-                    primaryKey = buildDB.getPrimaryKey(buildDB, line, fields);
+                Iterator it = buildDB.primaryKeyIndex.hashMap.entrySet().iterator();
+                while (it.hasNext()) {
+                    HashMap.Entry pair = (HashMap.Entry) it.next();
+                    line = buildDB.store.getRecord((Long) pair.getValue());
+                    primaryKey = (ArrayList<String>) pair.getKey();
                     lineOffset = buildDB.getLineOffset(buildDB, primaryKey);
+                    fields.clear();
+                    fields.addAll(Arrays.asList(line.split("\\|")));git
                     buildDB.columnIndices.get(i).storeMultivalue(fields.get(i), lineOffset);
                 }
                 buildDB.columnIndices.get(i).serialize();
@@ -85,8 +90,8 @@ class BuildDB {
     }
 
     private ArrayList<String> getPrimaryKey(BuildDB buildDB, String line, ArrayList<String> fields) {
-        fields.clear();
         ArrayList<String> primaryKey = new ArrayList<>();
+        fields.clear();
         fields.addAll(Arrays.asList(line.split("\\|")));
         primaryKey.add(fields.get(0));
         primaryKey.add(fields.get(1));

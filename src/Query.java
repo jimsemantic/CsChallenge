@@ -80,7 +80,7 @@ class Query {
         }
     }
 
-    private void testFunctionArgs(ArrayList<String> functionArgs) {
+    private void testFunctionArgs(ArrayList<String> functionArgs) throws IllegalArgumentException {
         Integer indexOfEqualsSign;
         for (String fa : functionArgs) {
             indexOfEqualsSign = fa.indexOf('=');

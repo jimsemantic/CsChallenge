@@ -68,7 +68,7 @@ class BuildDB {
                     primaryKey = (ArrayList<String>) pair.getKey();
                     lineOffset = buildDB.getLineOffset(buildDB, primaryKey);
                     fields.clear();
-                    fields.addAll(Arrays.asList(line.split("\\|")));git
+                    fields.addAll(Arrays.asList(line.split("\\|")));
                     buildDB.columnIndices.get(i).storeMultivalue(fields.get(i), lineOffset);
                 }
                 buildDB.columnIndices.get(i).serialize();

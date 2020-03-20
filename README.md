@@ -1,6 +1,6 @@
 # CsChallenge solution by Jim Miller
 I have purposely commented the code little in order to have a full discussion about my solution at an interview
-.  Thanks for the fun challenge.
+.  There are some assumptions, about the command line arguments and the formatting of the input data, listed at the top of the source files.  Thanks for the fun challenge.
 
 Usage:
 
